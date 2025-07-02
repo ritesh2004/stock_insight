@@ -1,0 +1,19 @@
+/__pycache__/
+*.py[cod]
+
+# Ignore Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+# Ignore Python virtual environments
+venv/
+# Ignore Python egg files
+*.egg
+# Ignore distribution files
+*.egg-info/ 
+# Ignore build directories
+build/
+
+# Ignore environment variables file
+.env
+
+# Ignore sqlite database file
+*.sqlite3
