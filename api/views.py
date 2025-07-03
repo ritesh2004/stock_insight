@@ -6,8 +6,8 @@ from rest_framework import generics
 
 # Model and Serializer imports
 from django.contrib.auth.models import User
-from .models import StockPrediction, StockInsight, TelegramUser
-from .serializers import StockPredictionSerializer, StockInsightSerializer, TelegramUserSerializer, RegisterUserSerializer, UserSerializer
+from .models import StockPrediction, TelegramUser
+from .serializers import StockPredictionSerializer, TelegramUserSerializer, RegisterUserSerializer, UserSerializer
 
 # Permission classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
@@ -30,13 +30,6 @@ class UserDetailView(generics.RetrieveUpdateAPIView):
     queryset = User.objects.all()
     permission_classes = [IsAuthenticated]
     
-# Viewset for Stock Insights
-class StockInsightViewSet(viewsets.ModelViewSet):
-    """Viewset for Stock Insights
-    """
-    queryset = StockInsight.objects.all()
-    serializer_class = StockInsightSerializer
-    permission_classes = [IsAuthenticated]
     
 # Viewset for Stock Predictions
 class StockPredictionViewSet(viewsets.ModelViewSet):

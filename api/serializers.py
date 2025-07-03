@@ -1,12 +1,6 @@
 from rest_framework import serializers
-from .models import StockPrediction, StockInsight, TelegramUser
+from .models import StockPrediction, TelegramUser
 from django.contrib.auth.models import User
-
-class StockInsightSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = StockInsight
-        fields = '__all__'
-        read_only_fields = ('last_updated',)
         
         
 class StockPredictionSerializer(serializers.ModelSerializer):
