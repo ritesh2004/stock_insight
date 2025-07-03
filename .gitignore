@@ -17,3 +17,6 @@ build/
 
 # Ignore sqlite database file
 *.sqlite3
+
+# Ignore media files
+media/
