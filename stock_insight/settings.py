@@ -11,11 +11,13 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
@@ -42,6 +44,7 @@ INSTALLED_APPS = [
     'api', # Custom app for API functionality
     'rest_framework', # Django REST Framework
     'rest_framework_simplejwt',  # JWT authentication
+    'django_filters',  # For filtering in API views
 ]
 
 MIDDLEWARE = [

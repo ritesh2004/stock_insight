@@ -14,7 +14,7 @@ class StockPredictionSerializer(serializers.ModelSerializer):
     class Meta:
         model = StockPrediction
         fields = '__all__'
-        read_only_fields = ('created_at', 'updated_at', 'mse', 'rmse', 'r2', 'plot_urls', 'metrics_json')
+        read_only_fields = ('created_at', 'updated_at', 'plot_urls', 'metrics_json')
         
         
 class TelegramUserSerializer(serializers.ModelSerializer):

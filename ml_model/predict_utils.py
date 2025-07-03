@@ -20,11 +20,10 @@ def save_plot(path):
 def fetch_ohlcv_data(ticker: str) -> pd.DataFrame:
     df = yf.download(ticker, period="10y", interval="1d")
     if df is None or df.empty:
-        raise ValueError(f"No data for ticker: {ticker}")
+        return pd.DataFrame()
     return df
 
-def predict_with_plot(ticker: str):
-    df = fetch_ohlcv_data(ticker)
+def predict_with_plot(df, ticker):
 
     # Split data
     train = df.Close[0:int(len(df)*0.7)]
@@ -73,7 +72,7 @@ def predict_with_plot(ticker: str):
 
     return {
         "next_day_price": float(y_pred[-1][0]),
-        "plot_urls": [history_path, pred_path],
+        "plot_urls": [f"{out_dir}/history.png", f"{out_dir}/history.png"],
         "metrics": {
             "mse": float(mean_squared_error(y_test, y_pred)),
             "rmse": float(np.sqrt(mean_squared_error(y_test, y_pred))),
