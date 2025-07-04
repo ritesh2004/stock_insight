@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 import os
+from decouple import config # For environment variable management
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -23,7 +24,7 @@ MEDIA_URL = '/media/'
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-*l2jqj7(k=n2k@370fu2#3svq6x9xe_s+2#b3x^e7-5w6_3bu5'
+SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -41,11 +42,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     
-    'api', # Custom app for API functionality
+    #'api', # Custom app for API functionality
     'rest_framework', # Django REST Framework
     'rest_framework_simplejwt',  # JWT authentication
     'django_filters',  # For filtering in API views
-    'core' # Core app for common functionality
+    'core', # Core app for common functionality
+    'api.apps.ApiConfig',  # Custom app for API functionality with signals
 ]
 
 MIDDLEWARE = [
@@ -140,3 +142,12 @@ REST_FRAMEWORK = {
     )
     
 }
+
+# Stripe settings
+
+STRIPE_SECRET_KEY = config('STRIPE_SECRET_KEY')
+STRIPE_PUBLIC_KEY = config('STRIPE_PUBLIC_KEY')
+STRIPE_WEBHOOK_SECRET = config('STRIPE_WEBHOOK_SECRET')
+
+# Model settings
+MODEL_PATH = config('MODEL_PATH')

@@ -8,8 +8,10 @@ from rest_framework import status
 
 # Model and Serializer imports
 from django.contrib.auth.models import User
-from .models import StockPrediction, TelegramUser
+from .models import StockPrediction, TelegramUser, UserProfile
 from .serializers import StockPredictionSerializer, TelegramUserSerializer, RegisterUserSerializer, UserSerializer
+
+from datetime import date
 
 # Permission classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
@@ -22,6 +24,10 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
 
 # Create your views here.
+
+def get_or_create_user_profile(user):
+    profile, created = UserProfile.objects.get_or_create(user=user)
+    return profile
 
 # Viewset for Registering new users
 class RegisterUserView(generics.CreateAPIView):
@@ -56,6 +62,20 @@ class StockPredictionViewSet(viewsets.ModelViewSet):
         """Override create method to handle custom logic if needed
         """
         try:
+            user = request.user
+            profile = get_or_create_user_profile(user)
+
+            # Reset count if new day
+            if profile.last_request_date != date.today():
+                profile.daily_request_count = 0
+                profile.last_request_date = date.today()
+
+            if not profile.is_pro and profile.daily_request_count >= 5:
+                return Response({'error': 'Quota exceeded. Upgrade to Pro.'}, status=429)
+
+            # Count this request
+            profile.daily_request_count += 1
+            profile.save()
             ticker = request.data.get('ticker')
             df = fetch_ohlcv_data(ticker)
             if df.empty:

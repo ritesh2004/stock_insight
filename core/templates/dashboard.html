@@ -1,7 +1,22 @@
-{% extends 'base.html' %} 
+{% extends 'base.html' %}
 {% block content %}
-<div class="max-w-4xl mx-auto mt-10 px-4">
+<div class="max-w-4xl mx-auto mt-10 px-4 mb-10">
   <h2 class="text-2xl font-bold mb-6">Stock Prediction Dashboard</h2>
+
+  {% if not user.is_pro %}
+    <p class="mt-2 text-red-600">
+      You're on a Free plan. 5 predictions/day limit.
+    </p>
+    <form method="post" action="/checkout/">
+      {% csrf_token %}
+      <button
+        type="submit"
+        class="my-2 bg-blue-600 text-white px-4 py-2 rounded"
+      >
+        Upgrade to Pro (₹199/mo)
+      </button>
+    </form>
+  {% endif %}
 
   <!-- Prediction Form -->
   <div class="bg-white shadow rounded-lg p-6 mb-6">
@@ -47,7 +62,7 @@
   <!-- Past Predictions -->
   <div class="bg-white shadow rounded-lg p-6">
     <h3 class="text-xl font-semibold mb-4">Past Predictions</h3>
-    
+
     {% if past_predictions %}
       <div class="overflow-x-auto">
         <table class="w-full border-collapse border border-gray-300">
@@ -164,65 +179,64 @@
 </div>
 
 <script>
-  document
-    .getElementById("predict-form")
-    .addEventListener("submit", async function (e) {
-      e.preventDefault();
-      const ticker = document.getElementById("ticker").value.trim().toUpperCase();
-      const csrf = document.querySelector("[name=csrfmiddlewaretoken]").value;
-      
-      if (!ticker) {
-        alert("Please enter a stock ticker symbol.");
-        return;
-      }
+  document.getElementById("predict-form").addEventListener("submit", async function (e) {
+    e.preventDefault();
+    const ticker = document.getElementById("ticker").value.trim().toUpperCase();
+    const csrf = document.querySelector("[name=csrfmiddlewaretoken]").value;
 
-      // Show loading state
-      const submitBtn = e.target.querySelector('button[type="submit"]');
-      const originalText = submitBtn.textContent;
-      submitBtn.textContent = "Predicting...";
-      submitBtn.disabled = true;
+    if (!ticker) {
+      alert("Please enter a stock ticker symbol.");
+      return;
+    }
 
-      try {
-        console.log(`Predicting for ticker: ${ticker}`);
-        const res = await fetch("/api/v1/predict/", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "X-CSRFToken": csrf,
-          },
-          body: JSON.stringify({ ticker }),
-        });
+    // Show loading state
+    const submitBtn = e.target.querySelector('button[type="submit"]');
+    const originalText = submitBtn.textContent;
+    submitBtn.textContent = "Predicting...";
+    submitBtn.disabled = true;
 
-        if (res.ok) {
-          const response = await res.json();
-          console.log("Prediction response:", response);
-          
-          if (response.data && response.data.next_day_price !== undefined) {
-            document.getElementById("price").textContent = `₹${response.data.next_day_price.toFixed(2)}`;
-            
-            // Handle plot URLs if they exist
-            if (response.data.plot_urls) {
-              const plotUrls = Object.values(response.data.plot_urls);
-              if (plotUrls[0]) document.getElementById("chart1").src = plotUrls[0];
-              if (plotUrls[1]) document.getElementById("chart2").src = plotUrls[1];
-            }
-            
-            document.getElementById("prediction-result").classList.remove("hidden");
-          } else {
-            alert("Prediction data is not available.");
+    try {
+      console.log(`Predicting for ticker: ${ticker}`);
+      const res = await fetch("/api/v1/predict/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": csrf,
+          "Accept": "application/json",
+        },
+        body: JSON.stringify({ ticker }),
+      });
+
+      if (res.ok) {
+        const response = await res.json();
+        console.log("Prediction response:", response);
+
+        if (response.data && response.data.next_day_price !== undefined) {
+          document.getElementById("price").textContent = `₹${response.data.next_day_price.toFixed(2)}`;
+
+          // Handle plot URLs if they exist
+          if (response.data.plot_urls) {
+            const plotUrls = Object.values(response.data.plot_urls);
+            if (plotUrls[0]) document.getElementById("chart1").src = plotUrls[0];
+            if (plotUrls[1]) document.getElementById("chart2").src = plotUrls[1];
           }
+
+          document.getElementById("prediction-result").classList.remove("hidden");
         } else {
-          const errorData = await res.json();
-          alert(`Prediction failed: ${errorData.error || "Please try again."}`);
+          alert("Prediction data is not available.");
         }
-      } catch (error) {
-        console.error("Error:", error);
-        alert("Network error. Please check your connection and try again.");
-      } finally {
-        // Reset button state
-        submitBtn.textContent = originalText;
-        submitBtn.disabled = false;
+      } else {
+        const errorData = await res.json();
+        alert(`Prediction failed: ${errorData.error || "Please try again."}`);
       }
-    });
+    } catch (error) {
+      console.error("Error:", error);
+      alert("Network error. Please check your connection and try again.");
+    } finally {
+      // Reset button state
+      submitBtn.textContent = originalText;
+      submitBtn.disabled = false;
+    }
+  });
 </script>
 {% endblock %}

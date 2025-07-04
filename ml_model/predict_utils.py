@@ -52,6 +52,7 @@ def predict_with_plot(df, ticker):
     os.makedirs(out_dir, exist_ok=True)
 
     plt.figure(figsize=(12, 5))
+    plt.switch_backend('AGG')
     plt.plot(y_test, 'b', label='Original Price')
     plt.plot(y_pred, 'r', label='Predicted Price')
     plt.title(f'Final Prediction for {ticker}')
@@ -63,6 +64,7 @@ def predict_with_plot(df, ticker):
 
     # Plot historical prices
     plt.figure(figsize=(12, 5))
+    plt.switch_backend('AGG')
     df['Close'].plot(title=f"{ticker} Closing Price History")
     plt.xlabel('Date')
     plt.ylabel('Price')

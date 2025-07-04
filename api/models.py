@@ -4,6 +4,18 @@ import json
 
 # Create your models here.
 
+class UserProfile(models.Model):
+    """
+    Model to store additional user information
+    """
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
+    is_pro = models.BooleanField(default=False, help_text="Indicates if the user has a premium account")
+    daily_request_count = models.PositiveIntegerField(default=0, help_text="Count of daily prediction requests made by the user")
+    last_request_date = models.DateField(auto_now_add=True, help_text="Date of the last prediction request made by the user")
+
+    def __str__(self):
+        return f"{self.user.username} Profile"
+
 class StockPrediction(models.Model):
     """
     Model to store stock prediction results with metrics and plot file paths
