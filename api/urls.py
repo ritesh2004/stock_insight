@@ -1,8 +1,6 @@
 from django.urls import path, include
 from .views import RegisterUserView, StockPredictionViewSet
 from rest_framework_simplejwt.views import TokenObtainPairView
-from django.conf import settings
-from django.conf.urls.static import static
 
 urlpatterns = [
     path('register/', RegisterUserView.as_view(), name='register_user'),
@@ -10,6 +8,3 @@ urlpatterns = [
     path('predict/', StockPredictionViewSet.as_view({'post': 'create'}), name='stock_prediction_create'),
     path('predictions/', StockPredictionViewSet.as_view({ 'get' : 'list' }), name='stock_prediction_list'),
 ]
-
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

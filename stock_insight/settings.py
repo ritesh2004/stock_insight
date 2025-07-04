@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'rest_framework', # Django REST Framework
     'rest_framework_simplejwt',  # JWT authentication
     'django_filters',  # For filtering in API views
+    'core' # Core app for common functionality
 ]
 
 MIDDLEWARE = [
@@ -62,7 +63,7 @@ ROOT_URLCONF = 'stock_insight.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'core' / 'templates'],  # Directory for custom templates
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -135,6 +136,7 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         
         'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
     )
     
 }

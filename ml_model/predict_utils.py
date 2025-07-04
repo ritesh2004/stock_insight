@@ -72,7 +72,7 @@ def predict_with_plot(df, ticker):
 
     return {
         "next_day_price": float(y_pred[-1][0]),
-        "plot_urls": [f"{out_dir}/history.png", f"{out_dir}/history.png"],
+        "plot_urls": [f"{out_dir}/history.png", f"{out_dir}/predicted.png"],
         "metrics": {
             "mse": float(mean_squared_error(y_test, y_pred)),
             "rmse": float(np.sqrt(mean_squared_error(y_test, y_pred))),
