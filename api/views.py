@@ -130,4 +130,9 @@ class TelegramUserViewSet(viewsets.ModelViewSet):
     serializer_class = TelegramUserSerializer
     permission_classes = [IsAuthenticated]
     
-    
+class HealthCheckView(generics.GenericAPIView):
+    """Health check endpoint to verify API is running
+    """
+    permission_classes = [AllowAny]
+    def get(self, request, *args, **kwargs):
+        return Response({"status": "ok"}, status=status.HTTP_200_OK)
