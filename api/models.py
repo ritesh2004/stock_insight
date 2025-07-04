@@ -61,10 +61,10 @@ class TelegramUser(models.Model):
     
     # Telegram user information
     chat_id = models.BigIntegerField(unique=True, db_index=True, help_text="Telegram chat ID")
-    telegram_user_id = models.BigIntegerField(help_text="Telegram user ID")
     username = models.CharField(max_length=255, blank=True, null=True, help_text="Telegram username")
-    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    is_pro = models.BooleanField(default=False, help_text="Indicates if the user has a premium account")
+    daily_request_count = models.PositiveIntegerField(default=0, help_text="Count of daily prediction requests made by the user")
+    last_request_date = models.DateField(auto_now_add=True, help_text="Date of the last prediction request made by the user")
     
     def __str__(self):
        return f"{self.username or 'Unknown'} ({self.chat_id})"

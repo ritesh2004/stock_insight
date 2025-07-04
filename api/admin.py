@@ -14,9 +14,9 @@ class StockPredictionAdmin(admin.ModelAdmin):
 
 @admin.register(TelegramUser)
 class TelegramUserAdmin(admin.ModelAdmin):
-    list_display = ('username', 'user', 'chat_id', 'telegram_user_id', 'created_at')
+    list_display = ('username', 'user', 'chat_id', 'is_pro', 'daily_request_count', 'last_request_date')
     search_fields = ('username', 'chat_id')
-    readonly_fields = ('created_at', 'updated_at', 'telegram_user_id', 'chat_id')
+    readonly_fields = ('chat_id', 'user')
     
 @admin.register(UserProfile)
 class UserProfileAdmin(admin.ModelAdmin):
